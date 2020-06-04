@@ -9,7 +9,7 @@ mysql56:
         environment:
                 - MYSQL_ROOT_PASSWORD=root
 redis6:
-        build: ./redis
+        image: redis:latest
         expose:
                 - "6379"
         ports:
@@ -17,6 +17,11 @@ redis6:
         volumes:
                 - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
                 - ./redis/data:/data
+        command:
+                - /bin/bash
+                - -c
+                - |
+                        redis-server /usr/local/etc/redis/redis.conf
 php-fpm72:
         image: 474949931/php-fpm72:latest
         expose:
