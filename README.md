@@ -19,8 +19,8 @@ mysql56:
         environment:
                 - MYSQL_ROOT_PASSWORD=root
 redis6:
-        #根据redis文件夹中Dockerfile文件进行镜像构建，生成redis6.0版本容器
-        build: ./redis
+        #redis最新版镜像
+        image: redis:latest
         #暴露内部服务访问端口
         expose:
                 - "6379"
@@ -31,6 +31,11 @@ redis6:
         volumes:
                 - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
                 - ./redis/data:/data
+        command:
+                - /bin/bash
+                - -c
+                - |
+                        redis-server /usr/local/etc/redis/redis.conf
 php-fpm72:
         #php-fpm7.2镜像，根据官方镜像加载了redis、pdo_mysql、mysql、gd等常用php扩展
         image: 474949931/php-fpm72:v2
