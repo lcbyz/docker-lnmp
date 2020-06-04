@@ -18,7 +18,7 @@ redis6:
                 - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
                 - ./redis/data:/data
 php-fpm72:
-        image: 474949931/php-fpm72:v2
+        image: 474949931/php-fpm72:latest
         expose:
                 - "9000"
         #执行用户
