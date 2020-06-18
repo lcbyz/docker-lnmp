@@ -53,6 +53,7 @@ nginx:
         volumes:
                 - ./nginx/www:/usr/share/nginx/html
                 - ./nginx/conf:/etc/nginx/conf.d
+                - ./nginx/log:/var/log/nginx
         links:
                 - php-fpm74
                 - php-fpm72
