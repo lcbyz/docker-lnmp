@@ -1,60 +1,63 @@
-mysql56:
-        image: 474949931/mysql56:v1
-        expose:
-                - "3306"
-        ports:
-                - "3306:3306"
-        volumes:
-                - ./mysql/data:/var/lib/mysql
-        environment:
-                - MYSQL_ROOT_PASSWORD=root
-redis6:
-        image: redis:latest
-        expose:
-                - "6379"
-        ports:
-                - "6379:6379"
-        volumes:
-                - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
-                - ./redis/data:/data
-        command:
-                - /bin/bash
-                - -c
-                - |
-                        redis-server /usr/local/etc/redis/redis.conf
-php-fpm72:
-        image: 474949931/php-fpm72:latest
-        expose:
-                - "9000"
-        #执行用户
-        user: 1001:1001
-        volumes:
-                - ./nginx/www:/var/www/html
-        links:
-                - mysql56
-                - redis6
-php-fpm74:
-        image: 474949931/php-fpm74:latest
-        expose:
-                - "9000"
-        #执行用户
-        user: 1001:1001
-        volumes:
-                - ./nginx/www:/var/www/html
-        links:
-                - mysql56
-                - redis6
-nginx:
-        image: nginx:latest
-        expose:
-                - "80"
-        ports:
-                - "80:80"
-        volumes:
-                - ./nginx/www:/usr/share/nginx/html
-                - ./nginx/conf:/etc/nginx/conf.d
-                - ./nginx/log:/var/log/nginx
-        links:
-                - php-fpm74
-                - php-fpm72
-
+version: '3'
+services:
+        mysql56:
+                image: 474949931/mysql56:v1
+                expose:
+                        - "3306"
+                ports:
+                        - "3306:3306"
+                volumes:
+                        - ./mysql/data:/var/lib/mysql
+                environment:
+                        - MYSQL_ROOT_PASSWORD=root
+        redis6:
+                image: redis:latest
+                expose:
+                        - "6379"
+                ports:
+                        - "6379:6379"
+                volumes:
+                        - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+                        - ./redis/data:/data
+                command:
+                        - /bin/bash
+                        - -c
+                        - |
+                                redis-server /usr/local/etc/redis/redis.conf
+        php-fpm72:
+                image: 474949931/php-fpm72:latest
+                expose:
+                        - "9000"
+                #执行用户
+                user: 1001:1001
+                volumes:
+                        - ./nginx/www:/var/www/html
+                        - ./php72/conf/php.ini:/usr/local/etc/php/php.ini
+                links:
+                        - mysql56
+                        - redis6
+        php-fpm74:
+                image: 474949931/php-fpm74:latest
+                expose:
+                        - "9000"
+                #执行用户
+                user: 1001:1001
+                volumes:
+                        - ./nginx/www:/var/www/html
+                        - ./php74/conf/php.ini:/usr/local/etc/php/php.ini
+                links:
+                        - mysql56
+                        - redis6
+        nginx:
+                image: nginx:latest
+                expose:
+                        - "80"
+                ports:
+                        - "80:80"
+                volumes:
+                        - ./nginx/www:/usr/share/nginx/html
+                        - ./nginx/conf:/etc/nginx/conf.d
+                        - ./nginx/logs:/var/log/nginx
+                links:
+                        - php-fpm74
+                        - php-fpm72
