@@ -1,5 +1,5 @@
-# docker_lnmp
-[docker_lnmp](https://github.com/yuxingfei/docker_lnmp) docker web环境，包含 Linux、nginx官方最新版、mysql5.6、php-fpm7.2、php-fpm7.4、redis6.0镜像，其中php-fpm镜像都加载了composer工具、gd、mysql、pdo_mysql、mysqli、redis相关常用扩展。
+# docker-lnmp
+[docker-lnmp](https://github.com/yuxingfei/docker-lnmp) docker web环境，包含 Linux、nginx官方最新版、mysql5.6、php-fpm7.2、php-fpm7.4、redis6.0镜像，其中php-fpm镜像都加载了composer工具、gd、mysql、pdo_mysql、mysqli、redis相关常用扩展。
 
 ## docker-compose.yml文件叙述
 ```
