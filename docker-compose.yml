@@ -2,16 +2,34 @@ version: '3'
 services:
         mysql56:
                 image: 474949931/mysql56:v1
+                container_name: mysql56
                 expose:
                         - "3306"
                 ports:
                         - "3306:3306"
                 volumes:
-                        - ./mysql/data:/var/lib/mysql
+                        - ./mysql56/data:/var/lib/mysql
                 environment:
                         - MYSQL_ROOT_PASSWORD=root
+                networks:
+                        - lnmp_network
+        mysql57:
+                image: mysql:5.7.30
+                container_name: mysql57
+                expose:
+                       - "3306"
+                ports:
+                       - "3307:3306"
+                volumes:
+                       - ./mysql57/data:/var/lib/mysql
+                       - ./mysql57/conf/mysql.cnf:/etc/mysql/mysql.cnf
+                environment:
+                       - MYSQL_ROOT_PASSWORD=root
+                networks:
+                        - lnmp_network
         redis6:
                 image: redis:latest
+                container_name: redis6
                 expose:
                         - "6379"
                 ports:
@@ -24,8 +42,13 @@ services:
                         - -c
                         - |
                                 redis-server /usr/local/etc/redis/redis.conf
+                networks:
+                        - lnmp_network
         php-fpm72:
-                image: 474949931/php-fpm72:latest
+                build:
+                        context: ./
+                        dockerfile: ./php72/Dockerfile
+                container_name: php-fpm72
                 expose:
                         - "9000"
                 #执行用户
@@ -36,20 +59,37 @@ services:
                 links:
                         - mysql56
                         - redis6
-        php-fpm74:
-                image: 474949931/php-fpm74:latest
+                networks:
+                        - lnmp_network
+        php-fpm7416:
+                build:
+                        context: ./
+                        dockerfile: ./php7416/Dockerfile
+                container_name: php-fpm7416
                 expose:
                         - "9000"
-                #执行用户
                 user: 1001:1001
                 volumes:
                         - ./nginx/www:/var/www/html
-                        - ./php74/conf/php.ini:/usr/local/etc/php/php.ini
-                links:
-                        - mysql56
-                        - redis6
+                        - ./php7416/conf/php.ini:/usr/local/etc/php/php.ini
+                networks:
+                        - lnmp_network
+        php-fpm80:
+                build:
+                        context: ./
+                        dockerfile: ./php80/Dockerfile
+                container_name: php-fpm80
+                expose:
+                        - "9000"
+                user: 1001:1001
+                volumes:
+                        - ./nginx/www:/var/www/html
+                        - ./fpm80/conf/php.ini:/usr/local/etc/php/php.ini
+                networks:
+                        - lnmp_network
         nginx:
                 image: nginx:latest
+                container_name: nginx
                 expose:
                         - "80"
                 ports:
@@ -59,5 +99,11 @@ services:
                         - ./nginx/conf:/etc/nginx/conf.d
                         - ./nginx/logs:/var/log/nginx
                 links:
-                        - php-fpm74
+                        - php-fpm7416
+                        - php-fpm80
                         - php-fpm72
+                networks:
+                        - lnmp_network
+networks:
+        lnmp_network:
+                driver: bridge

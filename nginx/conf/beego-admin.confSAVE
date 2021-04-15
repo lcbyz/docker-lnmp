@@ -1,0 +1,36 @@
+server {
+    charset utf-8;
+    client_max_body_size 128M;
+
+    listen 80; ## 监听 ipv4 上的 80 端口
+    #listen [::]:80 default_server ipv6only=on; ## 监听 ipv6 上的 80 端口
+
+    server_name www.testbeegoadmin.com;
+  
+    location / {
+        try_files $uri @backend;
+    }
+
+    #location /(css|js|fonts|img)/ {
+    #    access_log off;
+    #    expires 1d;
+    #    root "/path/to/app_b/static";
+    #    try_files $uri @backend;
+    #}
+
+    location @backend {
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host            $http_host;
+        proxy_pass http://beegoadmin:8000;
+    }
+
+    # 若取消下面这段的注释，可避免 Yii 接管不存在文件的处理过程（404）
+    #location ~ \.(js|css|png|jpg|gif|swf|ico|pdf|mov|fla|zip|rar)$ {
+    #    try_files $uri =404;
+    #}
+    #error_page 404 /404.html;
+
+    #location ~ /\.(ht|svn|git) {
+    #    deny all;
+    #}
+}
