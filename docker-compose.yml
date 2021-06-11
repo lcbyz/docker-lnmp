@@ -30,6 +30,8 @@ services:
         redis6:
                 image: redis:latest
                 container_name: redis6
+                environment:
+                        TZ: "Asia/Shanghai"
                 expose:
                         - "6379"
                 ports:
@@ -49,6 +51,8 @@ services:
                         context: ./
                         dockerfile: ./php72/Dockerfile
                 container_name: php-fpm72
+                environment:
+                        TZ: "Asia/Shanghai"
                 expose:
                         - "9000"
                 #执行用户
@@ -66,6 +70,8 @@ services:
                         context: ./
                         dockerfile: ./php7416/Dockerfile
                 container_name: php-fpm7416
+                environment:
+                        TZ: "Asia/Shanghai"
                 expose:
                         - "9000"
                 user: 1001:1001
@@ -79,6 +85,8 @@ services:
                         context: ./
                         dockerfile: ./php80/Dockerfile
                 container_name: php-fpm80
+                environment:
+                        TZ: "Asia/Shanghai"
                 expose:
                         - "9000"
                 user: 1001:1001
@@ -90,6 +98,8 @@ services:
         nginx:
                 image: nginx:latest
                 container_name: nginx
+                environment:
+                        TZ: "Asia/Shanghai"
                 expose:
                         - "80"
                 ports:
