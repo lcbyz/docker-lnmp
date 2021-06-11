@@ -17,6 +17,7 @@ RUN set -eux; \
         libbz2-dev \
         libjpeg-dev \
         libpng-dev \
+        libwebp-dev \
         curl \
         libcurl4-openssl-dev \
         libonig-dev \
@@ -25,7 +26,11 @@ RUN set -eux; \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         zlib1g-dev \
-   && docker-php-ext-install -j$(nproc) gd \
+        libmcrypt-dev \
+   && pecl install mcrypt-1.0.4 \
+   && docker-php-ext-enable mcrypt \
+   && docker-php-ext-configure gd --with-webp=/usr/include/webp --with-jpeg=/usr/include --with-freetype=/usr/include/freetype2 \
+   && docker-php-ext-install -j$(nproc) gd iconv \
        && docker-php-ext-install zip \
        && docker-php-ext-install pdo_mysql \
        && docker-php-ext-install opcache \
